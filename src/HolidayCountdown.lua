@@ -16,20 +16,15 @@ SHORT = { ["國慶日"]="國慶", ["光復節"]="光復節", ["行憲紀念日"]
   ["和平紀念日"]="228", ["兒童節、清明節"]="清明", ["勞動節"]="勞動節", ["端午節"]="端午", ["中秋節"]="中秋", ["教師節"]="教師節" }
 WD = {"日","一","二","三","四","五","六"}
 
--- 配色：三個時段＋放假
+-- 配色：三個時段＋放假（現代版）
 THEMES = {
-  morning   = { Band="2F6E9E", Paper="FFFFFF", Ink="222320", Muted="6A6F67", Line="E1E4DE", Red="CF2219", Under="E9ECEF", Track="F3D9D6", HeadC="CF2219", CDNum="222320", Acc="CF2219" },
-  afternoon = { Band="C0621A", Paper="FFFDF6", Ink="222320", Muted="6F6A5E", Line="EDE5D2", Red="CF2219", Under="EDE6D4", Track="F2DDC9", HeadC="CF2219", CDNum="222320", Acc="CF2219" },
-  night     = { Band="34426A", Paper="1D2433", Ink="E4E7EE", Muted="98A1B5", Line="2E3850", Red="FF6B5E", Under="161C28", Track="2E3850", HeadC="FF6B5E", CDNum="E4E7EE", Acc="FF6B5E" },
-  holiday   = { Band="FF5A00", Paper="FFB627", Ink="3A1F00", Muted="6E4300", Line="FFD77A", Red="E5006E", Under="E89A10", Track="FFD77A", HeadC="FFFFFF", CDNum="FFFFFF", Acc="E5006E" }
-}
--- 各狀態的文字位置（卡片座標，倍率 1）
-LAYOUT = {
-  work    = { CDY=155, CDLY=173, DetY=197, DashY=214, NextY=229 },
-  offwork = { CDY=133, CDLY=151, DetY=190, DashY=206, NextY=222.6 },
-  holiday = { CDY=152, CDLY=170, DetY=195, DashY=210.5, NextY=226 }
+  morning   = { Card="FFFFFF", Ink="1E2430", Muted="8A93A3", Acc="3D7BD9", Tint="F2F5FA", NumC="F26A21", Badge="3D7BD9", Dot="3D7BD9", CapC="3D7BD9", TitleHi="1E2430" },
+  afternoon = { Card="FFF3E3", Ink="2A2118", Muted="977F66", Acc="C7701F", Tint="FBE3C4", NumC="F26A21", Badge="C7701F", Dot="C7701F", CapC="C7701F", TitleHi="2A2118" },
+  night     = { Card="1C2230", Ink="EEF1F6", Muted="8B95A8", Acc="7C8CFF", Tint="262E40", NumC="FF8A4C", Badge="7C8CFF", Dot="7C8CFF", CapC="7C8CFF", TitleHi="EEF1F6" },
+  holiday   = { Card="FFAE1F", Ink="3A1F00", Muted="7A4A00", Acc="FFFFFF", Tint="FFC352", NumC="FFFFFF", Badge="FF5A00", Dot="FF5A00", CapC="3A1F00", TitleHi="FFFFFF" }
 }
 WORK_START, WORK_END, MORNING, NOON = 600, 1140, 360, 780
+WDE = {"SUN","MON","TUE","WED","THU","FRI","SAT"}
 
 local function serial(y, m, d) return math.floor(os.time({year=y, month=m, day=d, hour=12}) / 86400) end
 local function toTime(s) local t = os.date("*t", s * 86400 + 43200); return t end
@@ -83,6 +78,7 @@ local function at(s, mins)
   return os.time({year=t.year, month=t.month, day=t.day, hour=math.floor(mins/60), min=mins%60, sec=0})
 end
 local function set(k, v) SKIN:Bang("!SetVariable", k, v) end
+
 local function weatherText()
   local m = SKIN:GetMeasure("MeasureWxCode")
   if not m then return "" end
@@ -90,11 +86,10 @@ local function weatherText()
   local hi = tonumber(SKIN:GetMeasure("MeasureWxMax"):GetStringValue())
   local lo = tonumber(SKIN:GetMeasure("MeasureWxMin"):GetStringValue())
   if not code or not hi or not lo then return "" end
-  local w
-  if code == 0 then w = "晴" elseif code <= 2 then w = "晴時多雲" elseif code == 3 then w = "陰"
-  elseif code <= 48 then w = "霧" elseif code >= 95 then w = "雷雨"
-  elseif code <= 67 or (code >= 80 and code <= 82) then w = "有雨" else w = "多雲" end
-  return w .. " " .. math.floor(lo + 0.5) .. "–" .. math.floor(hi + 0.5) .. "°"
+  local icon
+  if code <= 1 then icon = "☀" elseif code <= 2 then icon = "⛅" elseif code <= 48 then icon = "☁"
+  elseif code >= 95 then icon = "⚡" elseif code <= 67 or (code >= 80 and code <= 82) then icon = "☂" else icon = "☁" end
+  return icon .. " " .. math.floor(lo + 0.5) .. "–" .. math.floor(hi + 0.5) .. "°"
 end
 
 local function getState(now)
@@ -109,6 +104,9 @@ local function getState(now)
   if brk then
     st.mode = "holiday"; st.brk = brk; st.back = brk.stop + 1
     st.target = at(st.back, WORK_START)
+    if isOff(today) then st.daysLeft = brk.stop - today + 1
+    elseif mins >= WORK_END then st.daysLeft = brk.len
+    else st.daysLeft = 0 end
   else
     if mins >= WORK_END or mins < MORNING then st.mode = "offwork" else st.mode = "work" end
     local first = today
@@ -126,8 +124,9 @@ local function getState(now)
   return st
 end
 
-local function pieDef(f, S)
-  local cx, cy, r = 177 * S, 55.5 * S, 10 * S
+-- 圓餅（以卡片座標計算，再加上外框位移與縮放）
+local function pieDef(f, S, ox, oy)
+  local cx, cy, r = (201 + ox) * S, (29 + oy) * S, 8 * S
   if f <= 0.001 then return string.format("%.2f,%.2f | LineTo %.2f,%.2f | ClosePath 1", cx, cy, cx, cy) end
   local parts = { string.format("%.2f,%.2f", cx, cy) }
   local n = math.max(2, math.ceil(72 * f))
@@ -143,41 +142,44 @@ function Update()
   local now = os.time()
   local st = getState(now)
   local S = tonumber(SKIN:GetVariable("S")) or 1
+  local ox = tonumber(SKIN:GetVariable("OX")) or 12
+  local oy = tonumber(SKIN:GetVariable("OY")) or 8
 
   if st.key ~= stateKey then
     stateKey = st.key
     for k, v in pairs(THEMES[st.slot]) do set(k, v) end
-    for k, v in pairs(LAYOUT[st.mode]) do set(k, tostring(v)) end
-    set("Date", st.t.month .. "月" .. st.t.day .. "日 星期" .. WD[st.t.wday])
+    set("WDay", WDE[st.t.wday]); set("DDay", tostring(st.t.day))
     local nextFrom = st.today
     if st.mode == "holiday" then
-      set("Label", ""); set("Num", ""); set("Unit", "")
-      set("Head", "放 假 囉 ！"); set("HeadX", "105.5")
-      local chip = title(st.brk) .. "，共 " .. st.brk.len .. " 天，還可以玩"
-      set("Chip", chip); set("ChipA", "FF")
-      set("Detail", mdw(st.back) .. "10:00 上班")
+      local nm = title(st.brk)
+      if st.daysLeft > 0 then set("Title", nm .. "還有 " .. st.daysLeft .. " 天可以玩")
+      else set("Title", nm .. "快結束了") end
+      set("NumTxt", ""); set("Unit", ""); set("CapTxt", "")
+      set("Head", "放 假 囉 ！"); set("HeadY", "99")
+      set("FootL", "◷  " .. mdw(st.back) .. "10:00 上班")
       nextFrom = st.back
     else
-      set("Chip", ""); set("ChipA", "00")
-      set("Detail", mdw(st.last) .. "19:00 下班放假")
+      local lj = nextLianjia(nextFrom)
+      if lj then set("FootL", "◷  " .. title(lj) .. " " .. (lj.start - st.today) .. " 天後") else set("FootL", "") end
       if st.mode == "work" then
-        set("Head", ""); set("Label", "距離放假還有"); set("Num", tostring(st.workdays)); set("Unit", "天")
-        set("NumR", tostring(100 + (string.len(tostring(st.workdays)) * 48 - 23) / 2))
+        set("Title", "距離放假"); set("Head", "")
+        set("NumTxt", tostring(st.workdays)); set("Unit", "天")
+        local n = string.len(tostring(st.workdays))
+        set("NumR", tostring(116 + (37 * n - 24) / 2))
+        set("CapTxt", mdw(st.last) .. "19:00 下班放假")
       else
-        set("Label", ""); set("Num", ""); set("Unit", "")
-        set("Head", "下 班 囉 ～"); set("HeadX", "100")
+        set("Title", "今天辛苦了"); set("NumTxt", ""); set("Unit", "")
+        set("Head", "下 班 囉 ～"); set("HeadY", "87.5")
+        set("CapTxt", "距離放假還有")
       end
     end
-    local lj = nextLianjia(nextFrom)
-    if lj then set("Next", title(lj) .. "還有 " .. (lj.start - st.today) .. " 天") else set("Next", "") end
     if st.mode == "work" then set("PieA", "FF"); set("CheckA", "00") else set("PieA", "00"); set("CheckA", "FF") end
   end
 
-  -- 右上角圓餅：今天上班時間還剩多少
   if st.mode == "work" then
     local f = 1
     if st.mins >= WORK_START then f = math.min(1, math.max(0, (at(st.today, WORK_END) - now) / (9 * 3600))) end
-    set("PieDef", pieDef(f, S))
+    set("PieDef", pieDef(f, S, ox, oy))
   end
 
   local left = math.max(0, st.target - now)

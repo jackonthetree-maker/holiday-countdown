@@ -1,42 +1,38 @@
-; 放假倒數：版面、配色、天氣（會自動更新，請勿手動修改）
+; 放假倒數：版面、配色、天氣（現代版，會自動更新，請勿手動修改）
 
 [Variables]
+OX=12
+OY=8
 UI=Microsoft JhengHei UI
-Band=2F6E9E
-Paper=FFFFFF
-Ink=222320
-Muted=6A6F67
-Line=E1E4DE
-Red=CF2219
-Under=E9ECEF
-Track=F3D9D6
-HeadC=CF2219
-CDNum=222320
-Acc=CF2219
-Date=
-Wx=
-Label=
-Num=
+NUMFONT=Segoe UI
+Card=FFFFFF
+Ink=1E2430
+Muted=8A93A3
+Acc=3D7BD9
+Tint=F2F5FA
+NumC=F26A21
+Badge=3D7BD9
+Dot=3D7BD9
+CapC=3D7BD9
+TitleHi=1E2430
+WDay=
+DDay=
+Title=
+NumTxt=
 Unit=
-NumR=112.5
+NumR=122.5
 Head=
-HeadX=100
-Chip=
-ChipA=00
-Detail=
-Next=
+HeadY=87.5
+CapTxt=
+FootL=
+Wx=
 CD=0
 CH=00
 CM=00
 CS=00
-CDY=155
-CDLY=173
-DetY=197
-DashY=214
-NextY=229
 PieA=00
 CheckA=00
-PieDef=177,55.5 | LineTo 177,55.5 | ClosePath 1
+PieDef=0,0 | LineTo 0,0 | ClosePath 1
 
 ; ===== 天氣（Open-Meteo，台北，每 30 分鐘更新）=====
 [MeasureWx]
@@ -64,203 +60,211 @@ StringIndex=3
 Measure=Script
 ScriptFile=#CURRENTPATH#DownloadFile\HolidayCountdown.lua
 
-; ===== 底圖：下層紙、紙張、日期色帶、虛線、圓餅／打勾 =====
-[MeterBG]
+; ===== 卡片：陰影、底、日期小月曆、圓餅／打勾、倒數區 =====
+[MeterCard]
 Meter=Shape
-Shape=Rectangle (3*#S#),(34*#S#),(194*#S#),(211*#S#),(4*#S#) | Fill Color #Under# | StrokeWidth 0
-Shape2=Rectangle 0,(26*#S#),(200*#S#),(215*#S#),(4*#S#) | Fill Color #Paper# | StrokeWidth 0
-Shape3=Rectangle 0,0,(200*#S#),(29*#S#),(6*#S#) | Fill Color #Band# | StrokeWidth 0
-Shape4=Rectangle 0,(18*#S#),(200*#S#),(11*#S#) | Fill Color #Band# | StrokeWidth 0
-Shape5=Line (13*#S#),(#DashY#*#S#),(187*#S#),(#DashY#*#S#) | StrokeWidth (1*#S#) | Stroke Color #Line# | StrokeDashes 3,3
-Shape6=Ellipse (177*#S#),(55.5*#S#),(10*#S#) | Fill Color #Track##PieA# | StrokeWidth 0
-Shape7=Path PieP | Fill Color #Red##PieA# | StrokeWidth 0
+Shape=Rectangle ((-4+#OX#)*#S#),((2+#OY#)*#S#),(240*#S#),(253*#S#),(28*#S#) | Fill Color 00000008 | StrokeWidth 0
+Shape2=Rectangle ((-2+#OX#)*#S#),((4+#OY#)*#S#),(236*#S#),(249*#S#),(26*#S#) | Fill Color 0000000C | StrokeWidth 0
+Shape3=Rectangle ((0+#OX#)*#S#),((6+#OY#)*#S#),(232*#S#),(245*#S#),(24*#S#) | Fill Color 00000012 | StrokeWidth 0
+Shape4=Rectangle ((0+#OX#)*#S#),((0+#OY#)*#S#),(232*#S#),(247*#S#),(24*#S#) | Fill Color #Card# | StrokeWidth 0
+Shape5=Rectangle ((18+#OX#)*#S#),((16.5+#OY#)*#S#),(24*#S#),(25*#S#),(6*#S#) | Fill Color FFFFFF | StrokeWidth (0.6*#S#) | Stroke Color 0000001A
+Shape6=Rectangle ((18+#OX#)*#S#),((26.5+#OY#)*#S#),(24*#S#),(15*#S#),(6*#S#) | Fill Color #Badge# | StrokeWidth 0
+Shape7=Rectangle ((18+#OX#)*#S#),((26.5+#OY#)*#S#),(24*#S#),(6*#S#) | Fill Color #Badge# | StrokeWidth 0
+Shape8=Ellipse ((201+#OX#)*#S#),((29+#OY#)*#S#),(13*#S#) | Fill Color #Acc##PieA# | StrokeWidth 0
+Shape9=Ellipse ((201+#OX#)*#S#),((29+#OY#)*#S#),(8*#S#) | Fill Color FFFFFF4D | StrokeWidth 0
+Shape10=Path PieP | Fill Color FFFFFF#PieA# | StrokeWidth 0
 PieP=#PieDef#
-Shape8=Ellipse (177*#S#),(55.5*#S#),(10*#S#) | Fill Color 34C759#CheckA# | StrokeWidth 0
-Shape9=Path CheckP | Fill Color 00000000 | StrokeWidth (2.2*#S#) | Stroke Color FFFFFF#CheckA# | StrokeLineJoin Round | StrokeStartCap Round | StrokeEndCap Round
-CheckP=(172.42*#S#),(55.92*#S#) | LineTo (175.42*#S#),(58.92*#S#) | LineTo (181.58*#S#),(52.58*#S#)
+Shape11=Ellipse ((201+#OX#)*#S#),((29+#OY#)*#S#),(13*#S#) | Fill Color 34C759#CheckA# | StrokeWidth 0
+Shape12=Path CheckP | Fill Color 00000000 | StrokeWidth (2.4*#S#) | Stroke Color FFFFFF#CheckA# | StrokeLineJoin Round | StrokeStartCap Round | StrokeEndCap Round
+CheckP=((195.5+#OX#)*#S#),((29.5+#OY#)*#S#) | LineTo ((199.1+#OX#)*#S#),((33.1+#OY#)*#S#) | LineTo ((206.5+#OX#)*#S#),((25.5+#OY#)*#S#)
+Shape13=Rectangle ((18+#OX#)*#S#),((156+#OY#)*#S#),(196*#S#),(51*#S#),(14*#S#) | Fill Color #Tint# | StrokeWidth 0
 DynamicVariables=1
+UpdateDivider=1
 
 [StyleText]
 FontFace=#UI#
 AntiAlias=1
 DynamicVariables=1
+StringAlign=CenterCenter
 
-; ===== 日期色帶 =====
-[MeterDate]
+; ===== 頂列 =====
+[MeterWDay]
 Meter=String
 MeterStyle=StyleText
-Text=#Date#
-X=(12*#S#)
-Y=(14.5*#S#)
-StringAlign=LeftCenter
-FontSize=(8.6*#S#)
+Text=#WDay#
+X=((30+#OX#)*#S#)
+Y=((21.6+#OY#)*#S#)
+FontFace=#NUMFONT#
+FontSize=(5.25*#S#)
+StringStyle=Bold
+FontColor=#Badge#
+
+[MeterDDay]
+Meter=String
+MeterStyle=StyleText
+Text=#DDay#
+X=((30+#OX#)*#S#)
+Y=((34+#OY#)*#S#)
+FontFace=#NUMFONT#
+FontSize=(8.25*#S#)
 StringStyle=Bold
 FontColor=FFFFFF
 
-[MeterWx]
+[MeterTitle]
 Meter=String
 MeterStyle=StyleText
-Text=#Wx#
-X=(188*#S#)
-Y=(14.5*#S#)
-StringAlign=RightCenter
-FontSize=(8.4*#S#)
-FontColor=FFFFFF
-
-; ===== 上班中：標題＋大數字 =====
-[MeterLabel]
-Meter=String
-MeterStyle=StyleText
-Text=#Label#
-X=(13*#S#)
-Y=(52.5*#S#)
-StringAlign=LeftCenter
-FontSize=(9.4*#S#)
+Text=#Title#
+X=((115+#OX#)*#S#)
+Y=((29+#OY#)*#S#)
+W=(140*#S#)
+ClipString=1
+FontSize=(9*#S#)
 StringStyle=Bold
 FontColor=#Ink#
+InlineSetting=Color | #TitleHi#
+InlinePattern=(\d+ 天)
+InlineSetting2=Weight | 900
+InlinePattern2=(\d+ 天)
 
+; ===== 中間：大數字 或 下班囉～／放假囉！ =====
 [MeterNum]
 Meter=String
 MeterStyle=StyleText
-Text=#Num#
-X=(#NumR#*#S#)
-Y=(103*#S#)
+Text=#NumTxt#
+X=((#NumR#+#OX#)*#S#)
+Y=((87.5+#OY#)*#S#)
 StringAlign=RightCenter
-FontFace=Georgia
-FontSize=(58.5*#S#)
+FontFace=#NUMFONT#
+FontSize=(51.75*#S#)
 StringStyle=Bold
-FontColor=#Red#
+FontColor=#NumC#
 
 [MeterUnit]
 Meter=String
 MeterStyle=StyleText
 Text=#Unit#
-X=((#NumR#+5)*#S#)
-Y=(120*#S#)
+X=(((#NumR#+4)+#OX#)*#S#)
+Y=((104+#OY#)*#S#)
 StringAlign=LeftCenter
-FontSize=(13.5*#S#)
+FontSize=(14.6*#S#)
 StringStyle=Bold
-FontColor=#Red#
+FontColor=#Muted#
 
-; ===== 下班囉～ ／ 放假囉！ =====
 [MeterHead]
 Meter=String
 MeterStyle=StyleText
 Text=#Head#
-X=(#HeadX#*#S#)
-Y=(86.6*#S#)
-StringAlign=CenterCenter
-FontSize=(25.5*#S#)
+X=((116+#OX#)*#S#)
+Y=((#HeadY#+#OY#)*#S#)
+FontSize=(22.5*#S#)
 StringStyle=Bold
-FontColor=#HeadC#
+FontColor=#NumC#
 
-[MeterChipBG]
-Meter=Shape
-Shape=Rectangle ([MeterChip:X]-(11*#S#)),([MeterChip:Y]-(3*#S#)),([MeterChip:W]+(22*#S#)),([MeterChip:H]+(6*#S#)),(([MeterChip:H]+(6*#S#))/2) | Fill Color FFE08A#ChipA# | StrokeWidth 0
-DynamicVariables=1
-
-[MeterChip]
+[MeterCap]
 Meter=String
 MeterStyle=StyleText
-Text=#Chip#
-X=(100*#S#)
-Y=(126*#S#)
-StringAlign=CenterCenter
-FontSize=(8.25*#S#)
+Text=#CapTxt#
+X=((116+#OX#)*#S#)
+Y=((134.5+#OY#)*#S#)
+FontSize=(7.5*#S#)
 StringStyle=Bold
-FontColor=E5006E
+FontColor=#CapC#
 
 ; ===== 倒數 =====
-[StyleCD]
-StringAlign=CenterCenter
-FontSize=(12*#S#)
+[StyleVal]
+FontFace=#NUMFONT#
+FontSize=(11.25*#S#)
 StringStyle=Bold
-FontColor=#CDNum#
-Y=(#CDY#*#S#)
+FontColor=#Ink#
+Y=((176+#OY#)*#S#)
 
-[StyleCDLabel]
-StringAlign=CenterCenter
-FontSize=(7.1*#S#)
+[StyleLab]
+FontFace=#NUMFONT#
+FontSize=(6.4*#S#)
 FontColor=#Muted#
-Y=(#CDLY#*#S#)
+Y=((192+#OY#)*#S#)
+InlineSetting=Color | #Dot#
+InlinePattern=^(•)
 
 [MeterCD]
 Meter=String
-MeterStyle=StyleText | StyleCD
+MeterStyle=StyleText | StyleVal
 Text=#CD#
-X=(42.5*#S#)
+X=((48.5+#OX#)*#S#)
 
 [MeterCH]
 Meter=String
-MeterStyle=StyleText | StyleCD
+MeterStyle=StyleText | StyleVal
 Text=#CH#
-X=(80.5*#S#)
+X=((93.5+#OX#)*#S#)
 
 [MeterCM]
 Meter=String
-MeterStyle=StyleText | StyleCD
+MeterStyle=StyleText | StyleVal
 Text=#CM#
-X=(118.5*#S#)
+X=((138.5+#OX#)*#S#)
 
 [MeterCS]
 Meter=String
-MeterStyle=StyleText | StyleCD
+MeterStyle=StyleText | StyleVal
 Text=#CS#
-X=(156.5*#S#)
+X=((183.5+#OX#)*#S#)
 
 [MeterCDL]
 Meter=String
-MeterStyle=StyleText | StyleCDLabel
-Text=天
-X=(42.5*#S#)
+MeterStyle=StyleText | StyleLab
+Text=• Days
+X=((48.5+#OX#)*#S#)
+InlineSetting2=Color | #Dot#59
+InlinePattern2=^(•)
 
 [MeterCHL]
 Meter=String
-MeterStyle=StyleText | StyleCDLabel
-Text=時
-X=(80.5*#S#)
+MeterStyle=StyleText | StyleLab
+Text=• Hrs
+X=((93.5+#OX#)*#S#)
+InlineSetting2=Color | #Dot#8C
+InlinePattern2=^(•)
 
 [MeterCML]
 Meter=String
-MeterStyle=StyleText | StyleCDLabel
-Text=分
-X=(118.5*#S#)
+MeterStyle=StyleText | StyleLab
+Text=• Min
+X=((138.5+#OX#)*#S#)
+InlineSetting2=Color | #Dot#BF
+InlinePattern2=^(•)
 
 [MeterCSL]
 Meter=String
-MeterStyle=StyleText | StyleCDLabel
-Text=秒
-X=(156.5*#S#)
+MeterStyle=StyleText | StyleLab
+Text=• Sec
+X=((183.5+#OX#)*#S#)
 
-; ===== 底部兩行 =====
-[MeterDetail]
+; ===== 底列 =====
+[MeterFootL]
 Meter=String
 MeterStyle=StyleText
-Text=#Detail#
-X=(100*#S#)
-Y=(#DetY#*#S#)
-W=(176*#S#)
+Text=#FootL#
+X=((18+#OX#)*#S#)
+Y=((225.5+#OY#)*#S#)
+StringAlign=LeftCenter
+W=(150*#S#)
 ClipString=1
-StringAlign=CenterCenter
-FontSize=(8.25*#S#)
+FontSize=(7.1*#S#)
 FontColor=#Ink#
+InlineSetting=Color | #Muted#
+InlinePattern=^(◷)
 
-[MeterNext]
+[MeterWx]
 Meter=String
 MeterStyle=StyleText
-Text=#Next#
-X=(100*#S#)
-Y=(#NextY#*#S#)
-W=(176*#S#)
-ClipString=1
-StringAlign=CenterCenter
-FontSize=(7.9*#S#)
+Text=#Wx#
+X=((214+#OX#)*#S#)
+Y=((225.5+#OY#)*#S#)
+StringAlign=RightCenter
+FontSize=(7.1*#S#)
 FontColor=#Ink#
-InlineSetting=Color | #Acc#
-InlinePattern=(\d+)(?= 天)
-InlineSetting2=Size | (10*#S#)
-InlinePattern2=(\d+)(?= 天)
-InlineSetting3=Weight | 700
-InlinePattern3=(\d+)(?= 天)
+InlineSetting=Color | #Muted#
+InlinePattern=^(\S+)
 
 ; HC-OK
