@@ -38,4 +38,8 @@ open(os.path.join(ROOT, 'dist/HolidayCountdown.rmskin'), 'wb').write(data + stru
 with zipfile.ZipFile(os.path.join(ROOT, 'dist/HolidayCountdown-manual.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
     for k, v in files.items():
         z.writestr(k.replace('Skins/', ''), v)
+# Mac（Übersicht）版
+mac = open(os.path.join(ROOT, 'src/mac/holiday-countdown.jsx'), encoding='utf8').read().replace('__VERSION__', str(int(float(VERSION))))
+os.makedirs(os.path.join(ROOT, 'mac'), exist_ok=True)
+open(os.path.join(ROOT, 'mac/holiday-countdown.jsx'), 'w', encoding='utf8').write(mac)
 print('built version', VERSION)
