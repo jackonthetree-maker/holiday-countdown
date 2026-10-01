@@ -131,7 +131,7 @@ local function pieDef(f, S, ox, oy)
   local parts = { string.format("%.2f,%.2f", cx, cy) }
   local n = math.max(2, math.ceil(72 * f))
   for i = 0, n do
-    local a = 2 * math.pi * f * i / n
+    local a = 2 * math.pi * ((1 - f) + f * i / n)  -- 從 12 點順時針被吃掉，剩下的部分越來越小
     parts[#parts + 1] = string.format("LineTo %.2f,%.2f", cx + r * math.sin(a), cy - r * math.cos(a))
   end
   parts[#parts + 1] = "ClosePath 1"
