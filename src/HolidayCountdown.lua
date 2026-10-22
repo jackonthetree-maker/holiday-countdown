@@ -156,9 +156,10 @@ function Update()
     if al then
       set("YiTxt", al[1] ~= "" and ("宜  " .. al[1]) or "今天沒什麼特別")
       set("Cai", "財神 " .. al[2])
-      set("JqTxt", al[3]); set("JqHide", al[3] == "" and "1" or "0")
+      local ic, nm = al[3]:match("^(%S+) (%S+)$")
+      set("JqIcon", ic or ""); set("JqName", nm or ""); set("JqHide", nm and "0" or "1")
     else
-      set("YiTxt", ""); set("Cai", ""); set("JqTxt", ""); set("JqHide", "1")
+      set("YiTxt", ""); set("Cai", ""); set("JqIcon", ""); set("JqName", ""); set("JqHide", "1")
     end
     local nextFrom = st.today
     if st.mode == "holiday" then

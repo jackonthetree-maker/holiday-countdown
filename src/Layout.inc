@@ -38,7 +38,8 @@ OddIcon=
 OddName=
 YiTxt=
 Cai=
-JqTxt=
+JqIcon=
+JqName=
 JqHide=1
 
 ; ===== 天氣（Open-Meteo，台北，每 30 分鐘更新）=====
@@ -278,12 +279,23 @@ Shape=Rectangle ((168+#OX#)*#S#),((226.5+#OY#)*#S#),(46*#S#),(17*#S#),(8.5*#S#) 
 Hidden=#JqHide#
 DynamicVariables=1
 
+[MeterJqIcon]
+Meter=String
+MeterStyle=StyleText
+Text=#JqIcon#
+X=((180+#OX#)*#S#)
+Y=((235.75+#OY#)*#S#)
+FontFace=Segoe UI Emoji
+FontSize=(7*#S#)
+FontColor=#Ink#
+Hidden=#JqHide#
+
 [MeterJq]
 Meter=String
 MeterStyle=StyleText
-Text=#JqTxt#
-X=((191+#OX#)*#S#)
-Y=((235+#OY#)*#S#)
+Text=#JqName#
+X=((197.5+#OX#)*#S#)
+Y=((235.75+#OY#)*#S#)
 FontSize=(7.1*#S#)
 StringStyle=Bold
 FontColor=#Ink#
