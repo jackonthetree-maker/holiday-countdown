@@ -25,6 +25,10 @@ Mac 版每天也會自動檢查這個儲存庫並更新自己；在選單列 Üb
   - `HolidayCountdown.ini`、`Updater.lua`：安裝後不會再變的外殼與自動更新
 - `skin/`：由 `build.py` 產生的 UTF-16 LE 檔案，小工具從這裡下載。
 - `dist/`：Windows 安裝檔。
+- `data/`：冷門節日與農民曆資料，`build.py` 會把它們嵌進 `HolidayCountdown.lua`。
+  - `odd-days.json`：366 天冷門節日（每一筆都在 Calendarr 2026、2027 兩年同一天出現過）
+  - `almanac.json`：每天的「宜」（財運／祈福，最多 2 項）、財神方位、節氣，目前到 2027-12-31
+  - `gen_almanac.js`：產生 `almanac.json`（`npm i lunar-javascript` 後執行），要延長年份就改裡面的結束年
 - `src/mac/holiday-countdown.jsx` → `mac/holiday-countdown.jsx`：Mac（Übersicht）版。假日資料和邏輯要和 Lua 版同步修改。
 
 ## 發布更新
