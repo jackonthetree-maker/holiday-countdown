@@ -7,7 +7,7 @@ const POSITION = "top: 40px; right: 40px;"; // 小工具在桌面上的位置
 const SCALE = 1;                             // 大小倍率，例如 0.8、1.2
 // <<< 設定
 
-const VERSION = 5;
+const VERSION = 6;
 const REPO = "https://raw.githubusercontent.com/jackonthetree-maker/holiday-countdown/main";
 
 // ===== 假日資料：行政院人事行政總處 115、116 年辦公日曆表 =====

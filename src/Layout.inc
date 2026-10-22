@@ -33,6 +33,13 @@ CS=00
 PieA=00
 CheckA=00
 PieDef=0,0 | LineTo 0,0 | ClosePath 1
+Hi=3D7BD9
+OddIcon=
+OddName=
+YiTxt=
+Cai=
+JqTxt=
+JqHide=1
 
 ; ===== 天氣（Open-Meteo，台北，每 30 分鐘更新）=====
 [MeasureWx]
@@ -63,10 +70,10 @@ ScriptFile=#CURRENTPATH#DownloadFile\HolidayCountdown.lua
 ; ===== 卡片：陰影、底、日期小月曆、圓餅／打勾、倒數區 =====
 [MeterCard]
 Meter=Shape
-Shape=Rectangle ((-4+#OX#)*#S#),((2+#OY#)*#S#),(240*#S#),(253*#S#),(28*#S#) | Fill Color 00000008 | StrokeWidth 0
-Shape2=Rectangle ((-2+#OX#)*#S#),((4+#OY#)*#S#),(236*#S#),(249*#S#),(26*#S#) | Fill Color 0000000C | StrokeWidth 0
-Shape3=Rectangle ((0+#OX#)*#S#),((6+#OY#)*#S#),(232*#S#),(245*#S#),(24*#S#) | Fill Color 00000012 | StrokeWidth 0
-Shape4=Rectangle ((0+#OX#)*#S#),((0+#OY#)*#S#),(232*#S#),(247*#S#),(24*#S#) | Fill Color #Card# | StrokeWidth 0
+Shape=Rectangle ((-4+#OX#)*#S#),((2+#OY#)*#S#),(240*#S#),(307*#S#),(28*#S#) | Fill Color 00000008 | StrokeWidth 0
+Shape2=Rectangle ((-2+#OX#)*#S#),((4+#OY#)*#S#),(236*#S#),(303*#S#),(26*#S#) | Fill Color 0000000C | StrokeWidth 0
+Shape3=Rectangle ((0+#OX#)*#S#),((6+#OY#)*#S#),(232*#S#),(299*#S#),(24*#S#) | Fill Color 00000012 | StrokeWidth 0
+Shape4=Rectangle ((0+#OX#)*#S#),((0+#OY#)*#S#),(232*#S#),(301*#S#),(24*#S#) | Fill Color #Card# | StrokeWidth 0
 Shape5=Rectangle ((18+#OX#)*#S#),((16.5+#OY#)*#S#),(24*#S#),(25*#S#),(6*#S#) | Fill Color FFFFFF | StrokeWidth (0.6*#S#) | Stroke Color 0000001A
 Shape6=Rectangle ((18+#OX#)*#S#),((26.5+#OY#)*#S#),(24*#S#),(15*#S#),(6*#S#) | Fill Color #Badge# | StrokeWidth 0
 Shape7=Rectangle ((18+#OX#)*#S#),((26.5+#OY#)*#S#),(24*#S#),(6*#S#) | Fill Color #Badge# | StrokeWidth 0
@@ -78,6 +85,7 @@ Shape11=Ellipse ((201+#OX#)*#S#),((29+#OY#)*#S#),(13*#S#) | Fill Color 34C759#Ch
 Shape12=Path CheckP | Fill Color 00000000 | StrokeWidth (2.4*#S#) | Stroke Color FFFFFF#CheckA# | StrokeLineJoin Round | StrokeStartCap Round | StrokeEndCap Round
 CheckP=((195.5+#OX#)*#S#),((29.5+#OY#)*#S#) | LineTo ((199.1+#OX#)*#S#),((33.1+#OY#)*#S#) | LineTo ((206.5+#OX#)*#S#),((25.5+#OY#)*#S#)
 Shape13=Rectangle ((18+#OX#)*#S#),((156+#OY#)*#S#),(196*#S#),(51*#S#),(14*#S#) | Fill Color #Tint# | StrokeWidth 0
+Shape14=Line ((18+#OX#)*#S#),((218.5+#OY#)*#S#),((214+#OX#)*#S#),((218.5+#OY#)*#S#) | StrokeWidth (1*#S#) | Stroke Color #Muted#55 | StrokeDashes 3,3
 DynamicVariables=1
 UpdateDivider=1
 
@@ -240,13 +248,89 @@ MeterStyle=StyleText | StyleLab
 Text=• Sec
 X=((183.5+#OX#)*#S#)
 
+; ===== 冷門節日、農民曆 =====
+[MeterOddIcon]
+Meter=String
+MeterStyle=StyleText
+Text=#OddIcon#
+X=((26+#OX#)*#S#)
+Y=((235+#OY#)*#S#)
+FontFace=Segoe UI Emoji
+FontSize=(9.5*#S#)
+FontColor=#Ink#
+
+[MeterOddName]
+Meter=String
+MeterStyle=StyleText
+Text=#OddName#
+X=((39+#OX#)*#S#)
+Y=((235+#OY#)*#S#)
+StringAlign=LeftCenter
+W=(125*#S#)
+ClipString=1
+FontSize=(8.6*#S#)
+StringStyle=Bold
+FontColor=#Ink#
+
+[MeterJqPill]
+Meter=Shape
+Shape=Rectangle ((168+#OX#)*#S#),((226.5+#OY#)*#S#),(46*#S#),(17*#S#),(8.5*#S#) | Fill Color 00000000 | StrokeWidth (1*#S#) | Stroke Color #Muted#66
+Hidden=#JqHide#
+DynamicVariables=1
+
+[MeterJq]
+Meter=String
+MeterStyle=StyleText
+Text=#JqTxt#
+X=((191+#OX#)*#S#)
+Y=((235+#OY#)*#S#)
+FontSize=(7.1*#S#)
+StringStyle=Bold
+FontColor=#Ink#
+Hidden=#JqHide#
+
+[MeterYi]
+Meter=String
+MeterStyle=StyleText
+Text=#YiTxt#
+X=((39+#OX#)*#S#)
+Y=((254+#OY#)*#S#)
+StringAlign=LeftCenter
+FontSize=(7.9*#S#)
+FontColor=#Ink#
+InlineSetting=Color | #Muted#
+InlinePattern=^(宜)
+InlineSetting2=Color | #Muted#
+InlinePattern2=( · )
+InlineSetting3=Color | #Muted#
+InlinePattern3=(今天沒什麼特別)
+InlineSetting4=Color | #Hi#
+InlinePattern4=(納財|開市|交易|立券|掛匾)
+InlineSetting5=Weight | 700
+InlinePattern5=(納財|開市|交易|立券|掛匾)
+
+[MeterCai]
+Meter=String
+MeterStyle=StyleText
+Text=#Cai#
+X=((214+#OX#)*#S#)
+Y=((254+#OY#)*#S#)
+StringAlign=RightCenter
+FontSize=(7.9*#S#)
+StringStyle=Bold
+FontColor=#Ink#
+InlineSetting=Color | #Muted#
+InlinePattern=^(財神)
+InlineSetting2=Weight | 400
+InlinePattern2=^(財神)
+
 ; ===== 底列 =====
 [MeterFootL]
 Meter=String
 MeterStyle=StyleText
 Text=#FootL#
 X=((18+#OX#)*#S#)
-Y=((225.5+#OY#)*#S#)
+Y=((279.5+#OY#)*#S#)
 StringAlign=LeftCenter
 W=(150*#S#)
 ClipString=1
@@ -260,7 +344,7 @@ Meter=String
 MeterStyle=StyleText
 Text=#Wx#
 X=((214+#OX#)*#S#)
-Y=((225.5+#OY#)*#S#)
+Y=((279.5+#OY#)*#S#)
 StringAlign=RightCenter
 FontSize=(8.25*#S#)
 FontColor=#Ink#

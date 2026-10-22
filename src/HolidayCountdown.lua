@@ -18,10 +18,10 @@ WD = {"日","一","二","三","四","五","六"}
 
 -- 配色：三個時段＋放假（現代版）
 THEMES = {
-  morning   = { Card="FFFFFF", Ink="1E2430", Muted="8A93A3", Acc="3D7BD9", Tint="F2F5FA", NumC="F26A21", Badge="3D7BD9", Dot="3D7BD9", CapC="3D7BD9", TitleHi="1E2430" },
-  afternoon = { Card="FFF3E3", Ink="2A2118", Muted="977F66", Acc="C7701F", Tint="FBE3C4", NumC="F26A21", Badge="C7701F", Dot="C7701F", CapC="C7701F", TitleHi="2A2118" },
-  night     = { Card="1C2230", Ink="EEF1F6", Muted="8B95A8", Acc="7C8CFF", Tint="262E40", NumC="FF8A4C", Badge="7C8CFF", Dot="7C8CFF", CapC="7C8CFF", TitleHi="EEF1F6" },
-  holiday   = { Card="FFAE1F", Ink="3A1F00", Muted="7A4A00", Acc="FFFFFF", Tint="FFC352", NumC="FFFFFF", Badge="FF5A00", Dot="FF5A00", CapC="3A1F00", TitleHi="FFFFFF" }
+  morning   = { Card="FFFFFF", Ink="1E2430", Muted="8A93A3", Acc="3D7BD9", Tint="F2F5FA", NumC="F26A21", Badge="3D7BD9", Dot="3D7BD9", CapC="3D7BD9", TitleHi="1E2430" , Hi="3D7BD9" },
+  afternoon = { Card="FFF3E3", Ink="2A2118", Muted="977F66", Acc="C7701F", Tint="FBE3C4", NumC="F26A21", Badge="C7701F", Dot="C7701F", CapC="C7701F", TitleHi="2A2118" , Hi="C7701F" },
+  night     = { Card="1C2230", Ink="EEF1F6", Muted="8B95A8", Acc="7C8CFF", Tint="262E40", NumC="FF8A4C", Badge="7C8CFF", Dot="7C8CFF", CapC="7C8CFF", TitleHi="EEF1F6" , Hi="7C8CFF" },
+  holiday   = { Card="FFAE1F", Ink="3A1F00", Muted="7A4A00", Acc="FFFFFF", Tint="FFC352", NumC="FFFFFF", Badge="FF5A00", Dot="FF5A00", CapC="3A1F00", TitleHi="FFFFFF" , Hi="D9005B" }
 }
 WORK_START, WORK_END, MORNING, NOON = 600, 1140, 360, 780
 WDE = {"SUN","MON","TUE","WED","THU","FRI","SAT"}
@@ -149,6 +149,17 @@ function Update()
     stateKey = st.key
     for k, v in pairs(THEMES[st.slot]) do set(k, v) end
     set("WDay", WDE[st.t.wday]); set("DDay", tostring(st.t.day))
+    -- 冷門節日、農民曆（只顯示財運／祈福、財神、節氣）
+    local od = ODD[os.date("%m-%d", now)]
+    set("OddIcon", od and od[1] or ""); set("OddName", od and od[2] or "")
+    local al = ALM[os.date("%Y%m%d", now)]
+    if al then
+      set("YiTxt", al[1] ~= "" and ("宜  " .. al[1]) or "今天沒什麼特別")
+      set("Cai", "財神 " .. al[2])
+      set("JqTxt", al[3]); set("JqHide", al[3] == "" and "1" or "0")
+    else
+      set("YiTxt", ""); set("Cai", ""); set("JqTxt", ""); set("JqHide", "1")
+    end
     local nextFrom = st.today
     if st.mode == "holiday" then
       local nm = title(st.brk)

@@ -9,7 +9,18 @@ def u16(path):
     t = open(path, encoding='utf8').read().replace('\r\n', '\n').replace('\n', '\r\n')
     return b'\xff\xfe' + t.encode('utf-16-le')
 
-lua = u16(os.path.join(ROOT, 'src/HolidayCountdown.lua'))
+import json
+def lstr(x):
+    assert '"' not in x and '\\' not in x, x
+    return '"' + x + '"'
+odd = json.load(open(os.path.join(ROOT, 'data/odd-days.json'), encoding='utf8'))
+alm = json.load(open(os.path.join(ROOT, 'data/almanac.json'), encoding='utf8'))
+data = ('-- 以下資料由 build.py 從 data/ 自動產生\n'
+        'ODD = {\n' + ',\n'.join('[%s]={%s,%s}' % (lstr(r[0]), lstr(r[1]), lstr(r[2])) for r in odd) + '\n}\n'
+        'ALM = {\n' + ',\n'.join('[%s]={%s,%s,%s}' % (lstr(r[0]), lstr(r[1]), lstr(r[2]), lstr(r[3])) for r in alm) + '\n}\n\n')
+src = open(os.path.join(ROOT, 'src/HolidayCountdown.lua'), encoding='utf8').read()
+lua_text = (data + src).replace('\r\n', '\n').replace('\n', '\r\n')
+lua = b'\xff\xfe' + lua_text.encode('utf-16-le')
 inc = u16(os.path.join(ROOT, 'src/Layout.inc'))
 os.makedirs(os.path.join(ROOT, 'skin'), exist_ok=True)
 open(os.path.join(ROOT, 'skin/HolidayCountdown.lua'), 'wb').write(lua)
